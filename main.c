@@ -4,7 +4,8 @@
 
 extern int sha1digest(uint8_t *digest, char *hexdigest, const uint8_t *data, size_t databytes);
 
-struct blob {
+struct blob
+{
     char file_name[100];
     char blob_hash[41];
 };

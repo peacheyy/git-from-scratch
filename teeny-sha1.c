@@ -41,13 +41,12 @@ extern int sha1digest(uint8_t *digest, char *hexdigest, const uint8_t *data, siz
  *    digest    -- the result, MUST be at least 20 bytes
  *    hexdigest -- the result in hex, MUST be at least 41 bytes
  *
- * At least one of the output buffers must be supplied.  The other, if not 
+ * At least one of the output buffers must be supplied.  The other, if not
  * desired, may be set to NULL.
  *
  * @return: 0 on success and non-zero on error.
  ******************************************************************************/
-int
-sha1digest(uint8_t *digest, char *hexdigest, const uint8_t *data, size_t databytes)
+int sha1digest(uint8_t *digest, char *hexdigest, const uint8_t *data, size_t databytes)
 {
 #define SHA1ROTATELEFT(value, bits) (((value) << (bits)) | ((value) >> (32 - (bits))))
 
@@ -87,20 +86,20 @@ sha1digest(uint8_t *digest, char *hexdigest, const uint8_t *data, size_t databyt
      Add bit '1' to end of message (big-endian)
      Add 64-bit message length in bits at very end (big-endian) */
   datatail[0] = 0x80;
-  datatail[tailbytes - 8] = (uint8_t) (databits >> 56 & 0xFF);
-  datatail[tailbytes - 7] = (uint8_t) (databits >> 48 & 0xFF);
-  datatail[tailbytes - 6] = (uint8_t) (databits >> 40 & 0xFF);
-  datatail[tailbytes - 5] = (uint8_t) (databits >> 32 & 0xFF);
-  datatail[tailbytes - 4] = (uint8_t) (databits >> 24 & 0xFF);
-  datatail[tailbytes - 3] = (uint8_t) (databits >> 16 & 0xFF);
-  datatail[tailbytes - 2] = (uint8_t) (databits >> 8 & 0xFF);
-  datatail[tailbytes - 1] = (uint8_t) (databits >> 0 & 0xFF);
+  datatail[tailbytes - 8] = (uint8_t)(databits >> 56 & 0xFF);
+  datatail[tailbytes - 7] = (uint8_t)(databits >> 48 & 0xFF);
+  datatail[tailbytes - 6] = (uint8_t)(databits >> 40 & 0xFF);
+  datatail[tailbytes - 5] = (uint8_t)(databits >> 32 & 0xFF);
+  datatail[tailbytes - 4] = (uint8_t)(databits >> 24 & 0xFF);
+  datatail[tailbytes - 3] = (uint8_t)(databits >> 16 & 0xFF);
+  datatail[tailbytes - 2] = (uint8_t)(databits >> 8 & 0xFF);
+  datatail[tailbytes - 1] = (uint8_t)(databits >> 0 & 0xFF);
 
   /* Process each 512-bit chunk */
   for (lidx = 0; lidx < loopcount; lidx++)
   {
     /* Compute all elements in W */
-    memset (W, 0, 80 * sizeof (uint32_t));
+    memset(W, 0, 80 * sizeof(uint32_t));
 
     /* Break 512-bit chunk into sixteen 32-bit, big endian words */
     for (widx = 0; widx <= 15; widx++)
@@ -127,11 +126,11 @@ sha1digest(uint8_t *digest, char *hexdigest, const uint8_t *data, size_t databyt
        "Improving the Performance of the Secure Hash Algorithm (SHA-1)" by Max Locktyukhin */
     for (widx = 16; widx <= 31; widx++)
     {
-      W[widx] = SHA1ROTATELEFT ((W[widx - 3] ^ W[widx - 8] ^ W[widx - 14] ^ W[widx - 16]), 1);
+      W[widx] = SHA1ROTATELEFT((W[widx - 3] ^ W[widx - 8] ^ W[widx - 14] ^ W[widx - 16]), 1);
     }
     for (widx = 32; widx <= 79; widx++)
     {
-      W[widx] = SHA1ROTATELEFT ((W[widx - 6] ^ W[widx - 16] ^ W[widx - 28] ^ W[widx - 32]), 2);
+      W[widx] = SHA1ROTATELEFT((W[widx - 6] ^ W[widx - 16] ^ W[widx - 28] ^ W[widx - 32]), 2);
     }
 
     /* Main loop */
@@ -163,10 +162,10 @@ sha1digest(uint8_t *digest, char *hexdigest, const uint8_t *data, size_t databyt
         f = b ^ c ^ d;
         k = 0xCA62C1D6;
       }
-      temp = SHA1ROTATELEFT (a, 5) + f + e + k + W[idx];
+      temp = SHA1ROTATELEFT(a, 5) + f + e + k + W[idx];
       e = d;
       d = c;
-      c = SHA1ROTATELEFT (b, 30);
+      c = SHA1ROTATELEFT(b, 30);
       b = a;
       a = temp;
     }
@@ -183,19 +182,19 @@ sha1digest(uint8_t *digest, char *hexdigest, const uint8_t *data, size_t databyt
   {
     for (idx = 0; idx < 5; idx++)
     {
-      digest[idx * 4 + 0] = (uint8_t) (H[idx] >> 24);
-      digest[idx * 4 + 1] = (uint8_t) (H[idx] >> 16);
-      digest[idx * 4 + 2] = (uint8_t) (H[idx] >> 8);
-      digest[idx * 4 + 3] = (uint8_t) (H[idx]);
+      digest[idx * 4 + 0] = (uint8_t)(H[idx] >> 24);
+      digest[idx * 4 + 1] = (uint8_t)(H[idx] >> 16);
+      digest[idx * 4 + 2] = (uint8_t)(H[idx] >> 8);
+      digest[idx * 4 + 3] = (uint8_t)(H[idx]);
     }
   }
 
   /* Store hex version of digest in supplied buffer */
   if (hexdigest)
   {
-    snprintf (hexdigest, 41, "%08x%08x%08x%08x%08x",
-              H[0],H[1],H[2],H[3],H[4]);
+    snprintf(hexdigest, 41, "%08x%08x%08x%08x%08x",
+             H[0], H[1], H[2], H[3], H[4]);
   }
 
   return 0;
-}  /* End of sha1digest() */
+} /* End of sha1digest() */
